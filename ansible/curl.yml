@@ -1,0 +1,16 @@
+- hosts: all
+  gather_facts: no
+  name: Install CURL.
+  tasks:
+  - name: Update APT cache.
+    become: yes
+    apt:
+      update_cache: true
+      cache_valid_time: 900
+
+  - name: Install CURL.
+    become: yes
+    apt:
+      name:
+        - curl
+      state: latest

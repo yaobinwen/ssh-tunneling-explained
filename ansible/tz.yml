@@ -1,0 +1,27 @@
+- name: Configure the time zone.
+  hosts: all
+  gather_facts: no
+  vars:
+    ansible_become: yes
+  tasks:
+    - name: Get status of /etc/localtime
+      stat:
+        path: /etc/localtime
+      register: file_stat
+
+    - when: not file_stat.stat.exists
+      block:
+      - name: Set system time zone to {{tz}}.
+        file:
+          state: link
+          force: yes
+          src: /usr/share/zoneinfo/{{tz}}
+          dest: /etc/localtime
+
+      - name: Reconfigure tzdata.
+        command:
+          argv:
+            - dpkg-reconfigure
+            - -f
+            - noninteractive
+            - tzdata

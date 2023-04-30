@@ -1,0 +1,16 @@
+- hosts: all
+  gather_facts: no
+  name: Install `openssh-server`.
+  tasks:
+  - name: Update APT cache.
+    become: yes
+    apt:
+      update_cache: true
+      cache_valid_time: 900
+
+  - name: Install `openssh-server`.
+    become: yes
+    apt:
+      name:
+        - openssh-server
+      state: latest

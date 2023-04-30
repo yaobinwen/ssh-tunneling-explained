@@ -1,0 +1,16 @@
+- hosts: all
+  gather_facts: no
+  name: Install Apache 2.
+  tasks:
+  - name: Update APT cache.
+    become: yes
+    apt:
+      update_cache: true
+      cache_valid_time: 900
+
+  - name: Install Apache 2.
+    become: yes
+    apt:
+      name:
+        - apache2
+      state: latest

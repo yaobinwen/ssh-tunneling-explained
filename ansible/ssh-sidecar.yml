@@ -1,0 +1,2 @@
+- import_playbook: openssh-server.yml
+- import_playbook: openssh-client.yml

@@ -73,56 +73,42 @@ end
 
 Vagrant.configure("2") do |config|
   config.vm.define "app-client" do |app_client|
-    stdopt(app_client, hostname: "ssh-demo-app-client", memory_mb: 1024)
+    stdopt(app_client, hostname: "app-client", memory_mb: 1024)
     opt_network(app_client, network_name: "vboxnet0", ip: "192.168.56.10")
 
     provision_timezone(app_client, tz: 'US/Eastern')
     provision_host(app_client, name: "app-client", playbook: "app-client.yml")
   end
 
-  config.vm.define "client-ssh-sidecar" do |client_ssh_sidecar|
-    stdopt(
-      client_ssh_sidecar,
-      hostname: "ssh-demo-client-ssh-sidecar",
-      memory_mb: 1024,
-    )
-    opt_network(
-      client_ssh_sidecar,
-      network_name: "vboxnet0",
-      ip: "192.168.56.20",
-    )
+  config.vm.define "ssh-access-point" do |ssh_access_point|
+    stdopt(ssh_access_point, hostname: "ssh-access-point", memory_mb: 1024)
+    opt_network(ssh_access_point, network_name: "vboxnet0", ip: "192.168.56.20")
+    opt_network(ssh_access_point, network_name: "vboxnet1", ip: "192.168.57.100")
 
-    provision_timezone(client_ssh_sidecar, tz: 'US/Eastern')
+    provision_timezone(ssh_access_point, tz: 'US/Eastern')
     provision_host(
-      client_ssh_sidecar,
-      name: "client-ssh-sidecar",
-      playbook: "ssh-sidecar.yml",
+      ssh_access_point,
+      name: "ssh-access-point",
+      playbook: "ssh-access-point.yml",
     )
   end
 
-  config.vm.define "server-ssh-sidecar" do |server_ssh_sidecar|
-    stdopt(
-      server_ssh_sidecar,
-      hostname: "ssh-demo-server-ssh-sidecar",
-      memory_mb: 1024,
-    )
-    opt_network(
-      server_ssh_sidecar,
-      network_name: "vboxnet0",
-      ip: "192.168.56.30",
-    )
+  config.vm.define "ssh-bridge" do |ssh_bridge|
+    stdopt(ssh_bridge, hostname: "ssh-bridge", memory_mb: 1024)
+    opt_network(ssh_bridge, network_name: "vboxnet1", ip: "192.168.57.101")
+    opt_network(ssh_bridge, network_name: "vboxnet2", ip: "192.168.58.111")
 
-    provision_timezone(server_ssh_sidecar, tz: 'US/Eastern')
+    provision_timezone(ssh_bridge, tz: 'US/Eastern')
     provision_host(
-      server_ssh_sidecar,
-      name: "server-ssh-sidecar",
-      playbook: "ssh-sidecar.yml",
+      ssh_bridge,
+      name: "ssh-bridge",
+      playbook: "ssh-bridge.yml",
     )
   end
 
   config.vm.define "app-server" do |app_server|
-    stdopt(app_server, hostname: "ssh-demo-app-server", memory_mb: 1024)
-    opt_network(app_server, network_name: "vboxnet0", ip: "192.168.56.40")
+    stdopt(app_server, hostname: "app-server", memory_mb: 1024)
+    opt_network(app_server, network_name: "vboxnet2", ip: "192.168.58.222")
 
     provision_timezone(app_server, tz: 'US/Eastern')
     provision_host(app_server, name: "app-server", playbook: "app-server.yml")

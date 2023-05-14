@@ -1,0 +1,3 @@
+- import_playbook: openssh-server.yml
+- import_playbook: ssh-password-auth.yml
+- import_playbook: openssh-client.yml
